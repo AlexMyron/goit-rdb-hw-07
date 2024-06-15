@@ -1,0 +1,55 @@
+// p_1
+SELECT 
+	id, 
+    date, 
+    YEAR(date) AS year, 
+    MONTH(date) AS month, 
+    DAY(date)  AS day
+FROM orders;
+
+===================
+// p_2
+SELECT 
+	id, 
+    date, 
+    DATE_ADD(date, INTERVAL 1 DAY) AS changed_date
+FROM orders;
+
+===================
+// p_3
+SELECT 
+	id, 
+    date, 
+    UNIX_TIMESTAMP(date) AS timestamp_date
+FROM orders;
+
+===================
+// p_4
+SELECT 
+    COUNT(*) AS amount
+FROM orders
+WHERE 
+	date BETWEEN '1996-07-10 00:00:00' AND '1996-10-08 00:00:00';
+
+===================
+// p_5
+DROP FUNCTION IF EXISTS CreateJson;
+
+DELIMITER //
+
+CREATE FUNCTION CreateJson(id INT, date DATE)
+RETURNS JSON
+DETERMINISTIC
+NO SQL
+BEGIN
+	RETURN JSON_OBJECT('id', id, 'date', date);
+END //
+
+DELIMITER ;
+
+SELECT 
+    id,
+    date,
+    CreateJson(id ,date) AS json_data
+FROM orders;
+
